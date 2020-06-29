@@ -1,12 +1,11 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, Enum
-from enum import Enum
-from .database import metadata
+from .database import metadata, engine
 from .schema import CardType
 
 users = Table(
     "users",
     metadata,
-    Column("user_id", Integer, primary_key=True),
+    Column("id", String, primary_key=True),
     Column("email", String),
     Column("secret_question", String),
     Column("password", String),
@@ -29,3 +28,5 @@ cards = Table(
     Column("type", Enum(CardType)),
     Column("text", String),
 )
+
+metadata.create_all(engine)

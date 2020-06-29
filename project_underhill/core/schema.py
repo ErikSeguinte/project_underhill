@@ -10,14 +10,14 @@ class CardType(str, Enum):
 class UserBase(BaseModel):
     email: str
     secret_question: str
+    id: str
 
 class UserCreate(UserBase):
     password: str
     secret_answer: str
 
 class User(UserBase):
-    id: str
-
+    pass
 
 class DeckBase(BaseModel):
     owner_id: str
@@ -33,12 +33,12 @@ class CardBase(BaseModel):
     deck_id: str
     type: CardType
     text: str
+    id: int
 
 class CardCreate(BaseModel):
     pass
 
 class Card(BaseModel):
-    id: int
-
+    pass
 
 
