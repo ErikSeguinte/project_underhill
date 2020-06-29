@@ -15,7 +15,6 @@ class UserBase(BaseModel):
         orm_mode = True
 
 
-
 class UserCreate(UserBase):
     password: str
     secret_answer: str
@@ -59,11 +58,13 @@ class CardCreate(BaseModel):
 class Card(BaseModel):
     pass
 
+
 class PlayerState(int, Enum):
     not_ready = 0
     ready = 1
     waiting = 2
     complete = 3
+
 
 class PlayerType(str, Enum):
     child = "child"

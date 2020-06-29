@@ -13,12 +13,9 @@ async def create_user(user: schema.UserCreate) -> schema.User:
     user_id = await get_random_string()
     while True:
         try:
-            query = users.insert().values(
-                **user.dict(),
-                id=user_id
-            )
+            query = users.insert().values(**user.dict(), id=user_id)
 
-            v = await database.execute(query)
+            await database.execute(query)
             break
         except IntegrityError:
             user_id = await get_random_string()

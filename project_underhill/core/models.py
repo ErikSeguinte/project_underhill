@@ -19,7 +19,6 @@ decks = Table(
     Column("owner_id", Integer, ForeignKey("users.id")),
 )
 
-
 cards = Table(
     "cards",
     metadata,
@@ -39,9 +38,6 @@ games = Table(
     Column("current_round", Integer),
 )
 
-
-
-
 rounds = Table(
     "rounds",
     metadata,
@@ -50,9 +46,6 @@ rounds = Table(
     Column("changeling_waiting", Enum(PlayerState)),
     Column("child_waiting", Enum(PlayerState)),
 )
-
-
-
 
 cards_in_hands = Table(
     "cards_in_hands",
