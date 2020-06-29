@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, String, Integer, ForeignKey, Enum
+from sqlalchemy import Table, Column, String, Integer, ForeignKey, Enum, Boolean
 from .database import metadata, engine
 from .schema import CardType
 
@@ -29,3 +29,43 @@ cards = Table(
     Column("text", String),
 )
 
+games = Table(
+    "games",
+    metadata,
+    Column("id", String, primary_key=True),
+    Column("changeling_deck_id", String, ForeignKey("decks.id")),
+    Column("child_deck_id", String, ForeignKey("decks.id")),
+    Column("rounds", Integer, ForeignKey("rounds.id")),
+    Column("current_round", Integer),
+)
+
+
+class PlayerState(int, Enum):
+    not_ready = 0
+    ready = 1
+    waiting = 2
+    complete = 3
+
+
+rounds = Table(
+    "rounds",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("round_number", Integer),
+    Column("changeling_waiting", Enum(PlayerState)),
+    Column("child_waiting", Enum(PlayerState)),
+)
+
+
+class PlayerType(str, Enum):
+    child = "child"
+    changeling = "changeling"
+
+
+cards_in_hands = Table(
+    "cards_in_hands",
+    metadata,
+    Column("round_id", Integer),
+    Column("card_id", Integer),
+    Column("player", Enum(PlayerType)),
+)
