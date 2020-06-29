@@ -29,4 +29,3 @@ cards = Table(
     Column("text", String),
 )
 
-metadata.create_all(engine)
