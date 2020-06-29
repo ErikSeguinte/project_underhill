@@ -10,20 +10,33 @@ class CardType(str, Enum):
 class UserBase(BaseModel):
     email: str
     secret_question: str
-    id: str
+
+    class Config:
+        orm_mode = True
+
+
 
 class UserCreate(UserBase):
     password: str
     secret_answer: str
 
-class User(UserBase):
+
+class UserVerify(UserCreate):
+    id: str
     pass
+
+
+class User(UserBase):
+    id: str
+
 
 class DeckBase(BaseModel):
     owner_id: str
 
+
 class DeckCreate(DeckBase):
     pass
+
 
 class DeckBase(DeckBase):
     id: str
@@ -35,10 +48,13 @@ class CardBase(BaseModel):
     text: str
     id: int
 
+    class Config:
+        orm_mode = True
+
+
 class CardCreate(BaseModel):
     pass
 
+
 class Card(BaseModel):
     pass
-
-
