@@ -51,11 +51,11 @@ class CardBase(BaseModel):
         orm_mode = True
 
 
-class CardCreate(BaseModel):
+class CardCreate(CardBase):
     pass
 
 
-class Card(BaseModel):
+class Card(CardBase):
     pass
 
 

@@ -1,0 +1,60 @@
+<!-- web_app/templates/layout.html -->
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+        <title>Tweet-Off!</title>
+    {% endblock %}
+
+
+    <link rel="stylesheet" href="{{ url_for('static', path='css/bulma.css') }}" media="all"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+
+<!-- SITE NAVIGATION -->
+<main class="container">
+    <h1 class="title"><a href="/">Twit-off!</a></h1>
+    {% block subtitle %}
+    {% endblock %}
+    <div>
+        {% block nav %}
+            <nav class="navbar is-success">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="/">
+                        <strong>HOME</strong>
+                    </a>
+                </div>
+                <div id="navbarBasic" class="navbar-menu is-active">
+                    <div class="navbar-start">
+                        <a class="navbar-item" href="/users">Users</a>
+                        <a class="navbar-item" href="/admin/db/reset_confirmation">Admin</a>
+                        <a class="navbar-item" href="/predict_form">Prediction</a>
+                    </div>
+                    <div class="navbar-end"></div>
+                </div>
+            </nav>
+        {% endblock %}
+
+    </div>
+
+
+    <!-- PAGE CONTENTS -->
+    <div id="content" class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer id="footer" class="footer">
+    &copy; Copyright 2020 Erik Seguinte |
+    <a href="https://github.com/erikseguinte/">source</a>
+</footer>
+
+</body>
+</html>

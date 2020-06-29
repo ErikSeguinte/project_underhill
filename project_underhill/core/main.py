@@ -1,14 +1,17 @@
 from fastapi import FastAPI
-from fastapi import status
-
-from . import schema
 from .database import database
-from . import models
-from . import crud
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from .security import pwd_context, get_random_string
+from ..routes.deck import router as deck_router
 
 app = FastAPI()
+
+app.include_router(deck_router, prefix="/deck")
+
+app.mount("/static", StaticFiles(directory="project_underhill/static"), name="static")
+# templates = Jinja2Templates(directory="../templates")
 
 
 @app.on_event("startup")
@@ -24,9 +27,3 @@ async def shutdown():
 @app.get("/")
 async def root():
     return {"message": "ok"}
-
-
-@app.post("/user", response_model=schema.User, status_code=status.HTTP_201_CREATED)
-async def create_user(user: schema.UserCreate):
-    new_user = await crud.create_user(user)
-    return new_user
