@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "app"
+name = "project_underhill"
 version = "0.1.0"
 description = ""
 authors = ["Erik Seguinte <ErikSeguinte@gmail.com>"]
@@ -15,6 +15,8 @@ alembic = "^1.4.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+pip = "^20.1.1"
+setuptools = "^47.3.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
