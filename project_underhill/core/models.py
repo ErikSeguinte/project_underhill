@@ -1,6 +1,6 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, Enum, Boolean
 from .database import metadata, engine
-from .schema import CardType
+from .schema import CardType, PlayerState, PlayerType
 
 users = Table(
     "users",
@@ -40,11 +40,6 @@ games = Table(
 )
 
 
-class PlayerState(int, Enum):
-    not_ready = 0
-    ready = 1
-    waiting = 2
-    complete = 3
 
 
 rounds = Table(
@@ -57,9 +52,6 @@ rounds = Table(
 )
 
 
-class PlayerType(str, Enum):
-    child = "child"
-    changeling = "changeling"
 
 
 cards_in_hands = Table(
