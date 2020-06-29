@@ -1,16 +1,15 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
 from ..core import crud, schema
 from typing import List
 
 router = APIRouter()
-templates = Jinja2Templates(directory="../templates")
+templates = Jinja2Templates(directory="project_underhill/templates")
 
 
 @router.get("/create")
-async def create_user(user: schema.UserCreate):
-    new_user = await crud.create_user(user)
-    return templates.TemplateResponse("layout.html", {})
+async def create_user(request: Request):
+    return templates.TemplateResponse("layout.html", {"request": request})
 
 
 @router.get("/{deck_id}", response_model=List[schema.Card])

@@ -11,7 +11,6 @@ app = FastAPI()
 app.include_router(deck_router, prefix="/deck")
 
 app.mount("/static", StaticFiles(directory="project_underhill/static"), name="static")
-# templates = Jinja2Templates(directory="../templates")
 
 
 @app.on_event("startup")
