@@ -8,8 +8,8 @@ router = APIRouter()
 templates = Jinja2Templates(directory="project_underhill/templates")
 
 
-@router.get("/create")
-async def create_user(request: Request, deck_id: Optional[str] = None):
+@router.get("/start")
+async def create_game(request: Request, deck_id: Optional[str] = None):
 
     labels = []
     for type in schema.CardType.__members__:

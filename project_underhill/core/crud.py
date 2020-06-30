@@ -54,3 +54,20 @@ async def get_cards_by_user(user_id: str):
     user_cards = [dict(card) for card in user_cards]
 
     return user_cards
+
+
+async def get_cards_by_deck(deck_id: str):
+    cards = models.cards
+    decks = models.decks
+
+    q = (
+        select([cards.c.deck_id, cards.c.id, cards.c.text, cards.c.type])
+        .select_from(cards.join(decks))
+        .where(decks.c.id == deck_id)
+    )
+
+    user_cards = await database.fetch_all(q)
+
+    user_cards = [dict(card) for card in user_cards]
+
+    return user_cards

@@ -70,8 +70,8 @@ async def process_things(things: List, deck_id: str, type: schema.CardType):
             await crud.create_card(schema.CardCreate(**t))
 
 
-@router.get("/{deck_id}", response_model=List[schema.Card])
+@router.get("/", response_model=List[schema.Card])
 async def get_deck(deck_id: str):
     input_id = deck_id
-    cards = await crud.get_cards_by_user(input_id)
+    cards = await crud.get_cards_by_deck(input_id)
     return cards
