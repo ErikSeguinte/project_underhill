@@ -22,7 +22,7 @@ async def create_user(request: Request, deck_id: Optional[str] = None):
     )
 
 
-@router.post("/create/add_to_db")
+@router.post("/create/add_to_db", status_code=status.HTTP_201_CREATED)
 async def receive_cards(
     r1: str = Form(""),
     r2: str = Form(""),
