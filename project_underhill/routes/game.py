@@ -23,43 +23,8 @@ async def create_game(request: Request, deck_id: Optional[str] = None):
 
 
 @router.post("/create/add_to_db", status_code=status.HTTP_201_CREATED)
-async def receive_cards(
-    r1: str = Form(""),
-    r2: str = Form(""),
-    r3: str = Form(""),
-    r4: str = Form(""),
-    r5: str = Form(""),
-    p1: str = Form(""),
-    p2: str = Form(""),
-    p3: str = Form(""),
-    p4: str = Form(""),
-    p5: str = Form(""),
-    a1: str = Form(""),
-    a2: str = Form(""),
-    a3: str = Form(""),
-    a4: str = Form(""),
-    a5: str = Form(""),
-    f1: str = Form(""),
-    f2: str = Form(""),
-    f3: str = Form(""),
-    f4: str = Form(""),
-    f5: str = Form(""),
-    deck_id: Optional[str] = None,
-):
-    relationships = [r1, r2, r3, r4, r5]
-    possessions = [p1, p2, p3, p4, p5]
-    actions = [a1, a2, a3, a4, a5]
-    feelings = [f1, f2, f3, f4, f5]
-
-    if not deck_id:
-        deck_id = await get_random_string()
-
-    await process_things(relationships, deck_id, schema.CardType.relationship)
-    await process_things(possessions, deck_id, schema.CardType.possession)
-    await process_things(actions, deck_id, schema.CardType.action)
-    await process_things(feelings, deck_id, schema.CardType.feeling)
-
-    return [deck_id, relationships, possessions, actions, feelings]
+async def receive_cards():
+    pass
 
 
 async def process_things(things: List, deck_id: str, type: schema.CardType):
