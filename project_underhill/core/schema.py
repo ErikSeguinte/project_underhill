@@ -5,6 +5,8 @@ from pydantic import BaseModel
 class CardType(str, Enum):
     relationship = "relationship"
     possession = "possession"
+    action = "action"
+    feeling = "feeling"
 
 
 class UserBase(BaseModel):
