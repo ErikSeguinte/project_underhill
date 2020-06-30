@@ -3,7 +3,11 @@
 {% block content %}
     <div class="section">
 
+        {%if  deck_id %}
+        <form action="/deck/create/add_to_db?deck_id={{ deck_id }}" method="post">
+        {% else %}
         <form action="/deck/create/add_to_db" method="post">
+        {% endif %}
             {% for label in labels %}
                 <div class="field">
                     <label class="label">{{ label[0] }}</label>

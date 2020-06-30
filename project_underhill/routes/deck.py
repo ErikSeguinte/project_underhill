@@ -1,14 +1,14 @@
 from fastapi import APIRouter, status, Request, Form
 from fastapi.templating import Jinja2Templates
 from ..core import crud, schema
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 templates = Jinja2Templates(directory="project_underhill/templates")
 
 
 @router.get("/create")
-async def create_user(request: Request):
+async def create_user(request: Request, deck_id: Optional[str] = None):
 
     labels = []
     for type in schema.CardType.__members__:
@@ -17,7 +17,7 @@ async def create_user(request: Request):
             labels.append(label)
 
     return templates.TemplateResponse(
-        "create_deck.html", {"request": request, "labels": labels}
+        "create_deck.html", {"request": request, "labels": labels, "deck_id": deck_id}
     )
 
 
@@ -43,13 +43,14 @@ async def receive_cards(
     f3: str = Form(""),
     f4: str = Form(""),
     f5: str = Form(""),
+    deck_id: Optional[str] = None,
 ):
     relationships = [r1, r2, r3, r4, r5]
     possessions = [p1, p2, p3, p4, p5]
     actions = [a1, a2, a3, a4, a5]
     feelings = [f1, f2, f3, f4, f5]
 
-    return [relationships, possessions, actions, feelings]
+    return [deck_id, relationships, possessions, actions, feelings]
 
 
 @router.get("/{deck_id}", response_model=List[schema.Card])
