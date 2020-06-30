@@ -47,7 +47,6 @@ class CardBase(BaseModel):
     deck_id: str
     type: CardType
     text: str
-    id: int
 
     class Config:
         orm_mode = True
@@ -58,7 +57,7 @@ class CardCreate(CardBase):
 
 
 class Card(CardBase):
-    pass
+    id: int
 
 
 class PlayerState(int, Enum):

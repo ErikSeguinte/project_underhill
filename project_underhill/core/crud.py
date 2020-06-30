@@ -26,6 +26,12 @@ async def create_user(user: schema.UserCreate) -> schema.User:
     return user
 
 
+async def create_card(card: schema.CardCreate):
+    cards = models.cards
+    query = cards.insert().values(**card.dict())
+    await database.execute(query)
+
+
 async def get_user_by_id(user_id: str) -> schema.User:
     users = models.users
     query = users.select().where(users.c.id == user_id)

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, status, Request, Form
 from fastapi.templating import Jinja2Templates
 from ..core import crud, schema
+from ..core.security import get_random_string
 from typing import List, Optional
 
 router = APIRouter()
@@ -50,7 +51,23 @@ async def receive_cards(
     actions = [a1, a2, a3, a4, a5]
     feelings = [f1, f2, f3, f4, f5]
 
+    if not deck_id:
+        deck_id = await get_random_string()
+
+    await process_things(relationships, deck_id, schema.CardType.relationship)
+    await process_things(possessions, deck_id, schema.CardType.possession)
+    await process_things(actions, deck_id, schema.CardType.action)
+    await process_things(feelings, deck_id, schema.CardType.feeling)
+
     return [deck_id, relationships, possessions, actions, feelings]
+
+
+async def process_things(things: List, deck_id: str, type: schema.CardType):
+    for thing in things:
+        if thing:
+            t = {"deck_id": deck_id, "type": type, "text": thing}
+
+            await crud.create_card(schema.CardCreate(**t))
 
 
 @router.get("/{deck_id}", response_model=List[schema.Card])
