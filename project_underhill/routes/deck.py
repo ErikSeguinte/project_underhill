@@ -53,7 +53,7 @@ async def receive_cards(
 
     awaitables = []
     if not deck_id:
-        deck_id = await crud.insure_unique(models.decks)
+        deck_id = await crud.get_unique_string(models.decks)
         awaitables.append(crud.create_deck(deck_id=deck_id))
 
     # Grab all the form data and put them into lists, ignoring blanks

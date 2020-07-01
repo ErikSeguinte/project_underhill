@@ -71,3 +71,34 @@ class PlayerState(int, Enum):
 class PlayerType(str, Enum):
     child = "child"
     changeling = "changeling"
+
+
+class GameBase(BaseModel):
+    id: str
+    changeling_deck_id: str
+    child_deck_id: str
+
+    class Config:
+        orm_mode = True
+
+
+class GameCreate(GameBase):
+    pass
+
+
+class Game(GameBase):
+    current_round: int = 1
+
+
+class RoundBase(BaseModel):
+    round_number: int
+    changeling_waiting: PlayerState = PlayerState.not_ready
+    child_waiting: PlayerState = PlayerState.not_ready
+
+
+class RoundCreate(RoundBase):
+    pass
+
+
+class Round(RoundBase):
+    id: int

@@ -50,6 +50,7 @@ rounds = Table(
 cards_in_hands = Table(
     "cards_in_hands",
     metadata,
+    Column("id", primary_key=True),
     Column("round_id", Integer, ForeignKey("rounds.id")),
     Column("card_id", Integer),
     Column("player", Enum(PlayerType)),

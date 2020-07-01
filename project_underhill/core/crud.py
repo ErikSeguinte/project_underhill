@@ -23,7 +23,7 @@ async def create_user(user: schema.UserCreate) -> schema.User:
 
     query = users.select().where(users.c.id == user_id)
     user: schema.User = await database.fetch_one(query)
-    return user
+    return schema.User.from_orm(user)
 
 
 async def create_card(card: schema.CardCreate):
@@ -35,7 +35,7 @@ async def create_card(card: schema.CardCreate):
 async def create_deck(owner_id="test", deck_id=None) -> schema.Deck:
     decks = models.decks
     if not deck_id:
-        deck_id = get_random_string()
+        deck_id = get_unique_string(decks)
     deck = {"id": deck_id, "owner_id": owner_id}
     q = decks.insert().values(**deck)
     await database.execute(q)
@@ -69,7 +69,7 @@ async def get_cards_by_user(user_id: str):
 
     user_cards = await database.fetch_all(query)
 
-    user_cards = [dict(card) for card in user_cards]
+    user_cards = [schema.Card.from_orm(card) for card in user_cards]
 
     return user_cards
 
@@ -86,12 +86,18 @@ async def get_cards_by_deck(deck_id: str):
 
     user_cards = await database.fetch_all(q)
 
-    user_cards = [dict(card) for card in user_cards]
+    user_cards = [schema.Card.from_orm(card) for card in user_cards]
 
     return user_cards
 
 
-async def insure_unique(table):
+async def create_game(new_game: schema.GameCreate):
+    games = models.games
+    query = games.insert().values(new_game.dict())
+    await database.execute(query)
+
+
+async def get_unique_string(table):
     while True:
         string = get_random_string()
         query = select([table.c.id]).where(table.c.id == string)
