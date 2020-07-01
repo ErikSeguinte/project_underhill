@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="section">
+        <p>Please note the URL to this page, or the unique deck ID below. Please save them. One of them will be needed
+            to start a game.</p>
+
+        <h3 class="subtitle">{{ deck_id }}</h3>
+
+        <ul>
+            {% for card in cards %}
+                <li> {{ card.text }} --- {{ card.type.value }}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+{% endblock content %}

@@ -1,4 +1,5 @@
-from fastapi import APIRouter, status, Request, Form
+from fastapi import APIRouter, status, Request, Form, Response
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from ..core import crud, schema, models
 from ..core.security import get_random_string
@@ -25,6 +26,7 @@ async def create_user(request: Request, deck_id: Optional[str] = None):
 
 @router.post("/create/add_to_db", status_code=status.HTTP_201_CREATED)
 async def receive_cards(
+    request: Request,
     owner_id: str = "test",
     r1: str = Form(""),
     r2: str = Form(""),
@@ -69,7 +71,9 @@ async def receive_cards(
     awaitables.append(crud.create_cards(things))
     results = await asyncio.gather(*awaitables)
 
-    return [deck_id, relationships, possessions, actions, feelings]
+    return RedirectResponse(
+        url=f"/deck/{deck_id}", status_code=status.HTTP_303_SEE_OTHER
+    )
 
 
 def process_things(things: List, deck_id: str, card_type: schema.CardType):
@@ -81,8 +85,10 @@ def process_things(things: List, deck_id: str, card_type: schema.CardType):
     return thing_list
 
 
-@router.get("/", response_model=List[schema.Card])
-async def get_deck(deck_id: str):
-    input_id = deck_id
-    cards = await crud.get_cards_by_deck(input_id)
-    return cards
+@router.get("/{deck_id}")
+async def get_deck(deck_id: str, request: Request):
+    cards = await crud.get_cards_by_deck(deck_id)
+    breakpoint()
+    return templates.TemplateResponse(
+        "deck_info.html", {"request": request, "cards": cards, "deck_id": deck_id}
+    )
