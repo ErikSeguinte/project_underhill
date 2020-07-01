@@ -23,8 +23,8 @@ async def setup_game(changeling=Form(None), child=Form(None)):
     child = process_string(child)
     changeling = process_string(changeling)
     id = await task
-    game: schema.GameCreate = schema.GameCreate(
-        id=id, child_deck_id=child, changeling_deck_id=changeling,
+    game: schema.Game = schema.Game(
+        id=id, child_deck_id=child, changeling_deck_id=changeling, current_round=1
     )
 
     aws = [
@@ -36,7 +36,9 @@ async def setup_game(changeling=Form(None), child=Form(None)):
     results = await asyncio.gather(*aws)
 
     combined_deck = categorize_decks(results[1] + results[2])
-    await setup_round_one(id, 1, combined_deck)
+    aws = [setup_round(id, n, combined_deck) for n in range(1, 5)]
+
+    await asyncio.gather(*aws)
 
     return {"results": results[1], "results2": results[2]}
 
@@ -58,13 +60,17 @@ def deal_cards(cards):
 
     for card_type in schema.CardType.__members__:
         superset = choices(cards[card_type], k=10)
-        changeling[card_type] = set(choices(superset, k=5))
-        child[card_type] = set(superset).difference(changeling)
+        changeling[f"{card_type}s"] = set(choices(superset, k=5))
+        child[f"{card_type}s"] = set(superset).difference(changeling)
 
-    return changeling, child
+    return parse_hand(changeling), parse_hand(child)
 
 
-async def setup_round_one(game_id, round_number, cards):
+def parse_hand(cards) -> schema.Hand:
+    return schema.Hand(**cards)
+
+
+async def setup_round(game_id, round_number, cards):
     changeling, child = deal_cards(cards)
     game_round = schema.RoundCreate(
         round_number=round_number,
@@ -79,3 +85,10 @@ def process_string(string: str) -> str:
     if "/" in string:
         string = string.split("/")[-1]
     return string
+
+
+@router.get("/{game_id}")
+async def serve_lobby(request: Request, game_id: str):
+    game = await crud.get_game(game_id)
+
+    return templates.TemplateResponse("lobby.html", {"request": request, "game": game})

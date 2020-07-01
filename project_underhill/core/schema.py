@@ -94,12 +94,19 @@ class Game(GameBase):
     current_round: int = 1
 
 
+class Hand(BaseModel):
+    relationships: List[Card]
+    possessions: List[Card]
+    actions: List[Card]
+    feelings: List[Card]
+
+
 class RoundBase(BaseModel):
     round_number: int
     changeling_waiting: PlayerState = PlayerState.not_ready
     child_waiting: PlayerState = PlayerState.not_ready
-    changeling_hand: Dict[CardType, List[Card]]
-    child_hand: Dict[CardType, List[Card]]
+    changeling_hand: Hand
+    child_hand: Hand
     game_id: str
 
 

@@ -120,7 +120,12 @@ async def get_unique_string(table):
 
 async def create_round(round: schema.RoundCreate):
     rounds = models.rounds
-    breakpoint()
     query = rounds.insert().values(**round.dict())
     result = await database.execute(query)
-    breakpoint()
+
+
+async def get_game(game_id: str) -> schema.Game:
+    games = models.games
+    query = games.select().where(games.c.id == game_id)
+    game = await database.fetch_one(query)
+    return schema.Game.from_orm(game)
