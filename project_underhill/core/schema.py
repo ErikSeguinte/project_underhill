@@ -1,5 +1,6 @@
 from enum import Enum
 from pydantic import BaseModel
+from typing import Dict, Set, List
 
 
 class CardType(str, Enum):
@@ -60,6 +61,9 @@ class CardCreate(CardBase):
 class Card(CardBase):
     id: int
 
+    def __hash__(self):
+        return hash(self.id)
+
 
 class PlayerState(int, Enum):
     not_ready = 0
@@ -94,6 +98,9 @@ class RoundBase(BaseModel):
     round_number: int
     changeling_waiting: PlayerState = PlayerState.not_ready
     child_waiting: PlayerState = PlayerState.not_ready
+    changeling_hand: Dict[CardType, List[Card]]
+    child_hand: Dict[CardType, List[Card]]
+    game_id: str
 
 
 class RoundCreate(RoundBase):
@@ -101,18 +108,4 @@ class RoundCreate(RoundBase):
 
 
 class Round(RoundBase):
-    id: int
-
-
-class CardInHandBase(BaseModel):
-    round_id: int
-    card_id: int
-    player: PlayerType
-
-
-class CardInHandCreate(CardInHandBase):
-    pass
-
-
-class CardInHand(CardInHandBase):
     id: int

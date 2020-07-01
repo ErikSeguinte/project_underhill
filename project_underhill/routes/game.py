@@ -36,7 +36,7 @@ async def setup_game(changeling=Form(None), child=Form(None)):
     results = await asyncio.gather(*aws)
 
     combined_deck = categorize_decks(results[1] + results[2])
-    setup_round_one(id, combined_deck)
+    await setup_round_one(id, 1, combined_deck)
 
     return {"results": results[1], "results2": results[2]}
 
@@ -57,15 +57,22 @@ def deal_cards(cards):
     child = {}
 
     for card_type in schema.CardType.__members__:
-        superset = set(choices(cards[card_type], 10))
-        changeling[card_type] = set(choices(superset, 5))
-        child[card_type] = superset.difference(changeling)
+        superset = choices(cards[card_type], k=10)
+        changeling[card_type] = set(choices(superset, k=5))
+        child[card_type] = set(superset).difference(changeling)
 
     return changeling, child
 
 
-async def setup_round_one(game_id, cards):
-    await crud.create_round()
+async def setup_round_one(game_id, round_number, cards):
+    changeling, child = deal_cards(cards)
+    game_round = schema.RoundCreate(
+        round_number=round_number,
+        game_id=game_id,
+        changeling_hand=changeling,
+        child_hand=child,
+    )
+    await crud.create_round(game_round)
 
 
 def process_string(string: str) -> str:

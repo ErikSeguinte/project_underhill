@@ -120,6 +120,7 @@ async def get_unique_string(table):
 
 async def create_round(round: schema.RoundCreate):
     rounds = models.rounds
-    query = rounds.insert(**round)
+    breakpoint()
+    query = rounds.insert().values(**round.dict())
     result = await database.execute(query)
     breakpoint()
