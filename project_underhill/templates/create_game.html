@@ -2,7 +2,28 @@
 
 {% block content %}
     <div class="section">
-        <
+        <p> Please enter your decks. Note: The field accepts either the ID by itself, or the unique deck URL</p>
+
+        <form action="/game/start" method="post">
+            <div class="field">
+                <label class="label"> Child Deck</label>
+                <div class="control">
+                    <input class="input" type="text" name="child">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label"> Changeling Deck</label>
+                <div class="control">
+                    <input class="input" type="text" name="changeling">
+                </div>
+            </div>
+
+            <div class="control">
+                <button class="button is-primary">Submit</button>
+            </div>
+
+        </form>
     </div>
 
 {% endblock content %}

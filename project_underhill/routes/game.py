@@ -9,17 +9,9 @@ templates = Jinja2Templates(directory="project_underhill/templates")
 
 
 @router.get("/start")
-async def create_game(request: Request, deck_id: Optional[str] = None):
+async def create_game(request: Request):
 
-    labels = []
-    for type in schema.CardType.__members__:
-        for n in range(1, 6):
-            label = [f"{type} {n}", f"{type[0]}{n}"]
-            labels.append(label)
-
-    return templates.TemplateResponse(
-        "create_deck.html", {"request": request, "labels": labels, "deck_id": deck_id}
-    )
+    return templates.TemplateResponse("create_game.html", {"request": request})
 
 
 @router.post("/create/add_to_db", status_code=status.HTTP_201_CREATED)

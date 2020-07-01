@@ -3,24 +3,24 @@
 {% block content %}
     <div class="section">
 
-        {%if  deck_id %}
-        <form action="/deck/create/add_to_db?deck_id={{ deck_id }}" method="post">
+        {% if  deck_id %}
+            <form action="/deck/create/add_to_db?deck_id={{ deck_id }}" method="post">
         {% else %}
-        <form action="/deck/create/add_to_db" method="post">
+            <form action="/deck/create/add_to_db" method="post">
         {% endif %}
-            {% for label in labels %}
-                <div class="field">
-                    <label class="label">{{ label[0] }}</label>
-                    <div class="control">
-                        <input type="text" class="input" name="{{ label[1] }}">
-                    </div>
-                </div>
-            {% endfor %}
-             <div class="field">
+        {% for label in labels %}
+            <div class="field">
+                <label class="label">{{ label[0] }}</label>
                 <div class="control">
-                    <button class="button is-primary">Submit</button>
+                    <input type="text" class="input" name="{{ label[1] }}">
                 </div>
             </div>
+        {% endfor %}
+        <div class="field">
+            <div class="control">
+                <button class="button is-primary">Submit</button>
+            </div>
+        </div>
         </form>
     </div>
 
