@@ -38,7 +38,6 @@ async def create_deck(owner_id="test", deck_id=None) -> schema.Deck:
         deck_id = get_random_string()
     deck = {"id": deck_id, "owner_id": owner_id}
     q = decks.insert().values(**deck)
-    breakpoint()
     await database.execute(q)
 
     q = decks.select().where(decks.c.id == deck_id)

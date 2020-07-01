@@ -88,7 +88,6 @@ def process_things(things: List, deck_id: str, card_type: schema.CardType):
 @router.get("/{deck_id}")
 async def get_deck(deck_id: str, request: Request):
     cards = await crud.get_cards_by_deck(deck_id)
-    breakpoint()
     return templates.TemplateResponse(
         "deck_info.html", {"request": request, "cards": cards, "deck_id": deck_id}
     )
