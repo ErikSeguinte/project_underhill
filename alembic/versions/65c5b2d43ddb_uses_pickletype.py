@@ -1,8 +1,8 @@
-"""round pk
+"""uses pickletype
 
-Revision ID: d18173ac325d
+Revision ID: 65c5b2d43ddb
 Revises: 
-Create Date: 2020-07-01 10:18:45.445470
+Create Date: 2020-07-01 12:34:53.665611
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "d18173ac325d"
+revision = "65c5b2d43ddb"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,6 +32,8 @@ def upgrade():
             sa.Enum("not_ready", "ready", "waiting", "complete", name="playerstate"),
             nullable=True,
         ),
+        sa.Column("changeling_hand", sa.PickleType(), nullable=True),
+        sa.Column("child_hand", sa.PickleType(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -41,17 +43,6 @@ def upgrade():
         sa.Column("secret_question", sa.String(), nullable=True),
         sa.Column("password", sa.String(), nullable=True),
         sa.Column("secret_answer", sa.String(), nullable=True),
-        sa.PrimaryKeyConstraint("id"),
-    )
-    op.create_table(
-        "cards_in_hands",
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("round_id", sa.Integer(), nullable=True),
-        sa.Column("card_id", sa.Integer(), nullable=True),
-        sa.Column(
-            "player", sa.Enum("child", "changeling", name="playertype"), nullable=True
-        ),
-        sa.ForeignKeyConstraint(["round_id"], ["rounds.id"],),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -94,7 +85,6 @@ def downgrade():
     op.drop_table("games")
     op.drop_table("cards")
     op.drop_table("decks")
-    op.drop_table("cards_in_hands")
     op.drop_table("users")
     op.drop_table("rounds")
     # ### end Alembic commands ###
