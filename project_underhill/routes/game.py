@@ -87,6 +87,11 @@ def process_string(string: str) -> str:
     return string
 
 
+@router.post("/{game_id}/play")
+async def play(game_id: str, who: schema.PlayerType):
+    breakpoint()
+
+
 @router.get("/{game_id}")
 async def serve_lobby(request: Request, game_id: str):
     game = await crud.get_game(game_id)

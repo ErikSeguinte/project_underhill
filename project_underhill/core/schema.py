@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntFlag, auto
 from pydantic import BaseModel
 from typing import Dict, Set, List
 
@@ -65,11 +65,10 @@ class Card(CardBase):
         return hash(self.id)
 
 
-class PlayerState(int, Enum):
-    not_ready = 0
-    ready = 1
-    waiting = 2
-    complete = 3
+class PlayerState(IntFlag):
+    self_cards_chosen = auto()
+    other_cards_chosen = auto()
+    ready = auto()
 
 
 class PlayerType(str, Enum):
