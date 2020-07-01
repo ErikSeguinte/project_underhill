@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from .database import database
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -18,6 +18,8 @@ def create_app():
         "/static", StaticFiles(directory="project_underhill/static"), name="static"
     )
 
+    templates = Jinja2Templates(directory="project_underhill/templates")
+
     @app.on_event("startup")
     async def startup():
         await database.connect()
@@ -27,7 +29,7 @@ def create_app():
         await database.disconnect()
 
     @app.get("/")
-    async def root():
-        return {"message": "ok"}
+    async def root(request: Request):
+        return templates.TemplateResponse("layout.html", {"request": request})
 
     return app
