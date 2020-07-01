@@ -33,14 +33,15 @@ class User(UserBase):
 
 class DeckBase(BaseModel):
     owner_id: str
+    id: str
 
 
 class DeckCreate(DeckBase):
     pass
 
 
-class DeckBase(DeckBase):
-    id: str
+class Deck(DeckBase):
+    pass
 
 
 class CardBase(BaseModel):

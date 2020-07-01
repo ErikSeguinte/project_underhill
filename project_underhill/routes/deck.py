@@ -1,8 +1,9 @@
 from fastapi import APIRouter, status, Request, Form
 from fastapi.templating import Jinja2Templates
-from ..core import crud, schema
+from ..core import crud, schema, models
 from ..core.security import get_random_string
 from typing import List, Optional
+import asyncio
 
 router = APIRouter()
 templates = Jinja2Templates(directory="project_underhill/templates")
@@ -24,6 +25,7 @@ async def create_user(request: Request, deck_id: Optional[str] = None):
 
 @router.post("/create/add_to_db", status_code=status.HTTP_201_CREATED)
 async def receive_cards(
+    owner_id: str = "test",
     r1: str = Form(""),
     r2: str = Form(""),
     r3: str = Form(""),
@@ -46,28 +48,37 @@ async def receive_cards(
     f5: str = Form(""),
     deck_id: Optional[str] = None,
 ):
-    relationships = [r1, r2, r3, r4, r5]
-    possessions = [p1, p2, p3, p4, p5]
-    actions = [a1, a2, a3, a4, a5]
-    feelings = [f1, f2, f3, f4, f5]
 
+    awaitables = []
     if not deck_id:
-        deck_id = await get_random_string()
+        deck_id = await crud.insure_unique(models.decks)
+        awaitables.append(crud.create_deck(deck_id=deck_id))
 
-    await process_things(relationships, deck_id, schema.CardType.relationship)
-    await process_things(possessions, deck_id, schema.CardType.possession)
-    await process_things(actions, deck_id, schema.CardType.action)
-    await process_things(feelings, deck_id, schema.CardType.feeling)
+    # Grab all the form data and put them into lists, ignoring blanks
+    relationships = [x for x in [r1, r2, r3, r4, r5] if x]
+    possessions = [x for x in [p1, p2, p3, p4, p5] if x]
+    actions = [x for x in [a1, a2, a3, a4, a5] if x]
+    feelings = [x for x in [f1, f2, f3, f4, f5] if x]
+
+    things = []
+    things += process_things(relationships, deck_id, schema.CardType.relationship)
+    things += process_things(possessions, deck_id, schema.CardType.possession)
+    things += process_things(actions, deck_id, schema.CardType.action)
+    things += process_things(feelings, deck_id, schema.CardType.feeling)
+
+    awaitables.append(crud.create_cards(things))
+    results = await asyncio.gather(*awaitables)
 
     return [deck_id, relationships, possessions, actions, feelings]
 
 
-async def process_things(things: List, deck_id: str, type: schema.CardType):
-    for thing in things:
-        if thing:
-            t = {"deck_id": deck_id, "type": type, "text": thing}
+def process_things(things: List, deck_id: str, card_type: schema.CardType):
+    """turns a list of things into a list of dicts of things"""
 
-            await crud.create_card(schema.CardCreate(**t))
+    thing_list = [
+        {"deck_id": deck_id, "type": card_type, "text": thing} for thing in things
+    ]
+    return thing_list
 
 
 @router.get("/", response_model=List[schema.Card])
