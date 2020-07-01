@@ -1,8 +1,8 @@
-"""new enums
+"""round pk
 
-Revision ID: 3de523d5dcd5
-Revises: f618e3b5ed43
-Create Date: 2020-06-29 19:58:09.618483
+Revision ID: d18173ac325d
+Revises: 
+Create Date: 2020-07-01 10:18:45.445470
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "3de523d5dcd5"
-down_revision = "f618e3b5ed43"
+revision = "d18173ac325d"
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -45,12 +45,14 @@ def upgrade():
     )
     op.create_table(
         "cards_in_hands",
+        sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("round_id", sa.Integer(), nullable=True),
         sa.Column("card_id", sa.Integer(), nullable=True),
         sa.Column(
             "player", sa.Enum("child", "changeling", name="playertype"), nullable=True
         ),
         sa.ForeignKeyConstraint(["round_id"], ["rounds.id"],),
+        sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "decks",

@@ -102,3 +102,17 @@ class RoundCreate(RoundBase):
 
 class Round(RoundBase):
     id: int
+
+
+class CardInHandBase(BaseModel):
+    round_id: int
+    card_id: int
+    player: PlayerType
+
+
+class CardInHandCreate(CardInHandBase):
+    pass
+
+
+class CardInHand(CardInHandBase):
+    id: int
