@@ -97,7 +97,6 @@ async def insure_unique(table):
         string = get_random_string()
         query = select([table.c.id]).where(table.c.id == string)
         result = await database.fetch_one(query)
-        breakpoint()
         if not result:
             break
 
