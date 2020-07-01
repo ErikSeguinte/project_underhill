@@ -74,7 +74,7 @@ async def get_cards_by_user(user_id: str):
     return user_cards
 
 
-async def get_cards_by_deck(deck_id: str):
+async def get_cards_by_deck(deck_id: str, categorize=False):
     cards = models.cards
     decks = models.decks
 
@@ -86,9 +86,19 @@ async def get_cards_by_deck(deck_id: str):
 
     user_cards = await database.fetch_all(q)
 
-    user_cards = [schema.Card.from_orm(card) for card in user_cards]
+    if categorize:
+        processed_cards = {}
+        for card in user_cards:
+            card = schema.Card.from_orm(card)
+            if processed_cards.get(card.type):
+                processed_cards[card.type].append(card)
+            else:
+                processed_cards[card.type] = [card]
 
-    return user_cards
+    else:
+        processed_cards = [schema.Card.from_orm(card) for card in user_cards]
+
+    return processed_cards
 
 
 async def create_game(new_game: schema.GameCreate):

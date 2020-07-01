@@ -18,17 +18,18 @@ async def create_game(request: Request):
 @router.post("/setup")
 async def setup_game(changeling=Form(None), child=Form(None)):
 
-    id = await crud.get_unique_string(models.games)
+    task = asyncio.create_task(crud.get_unique_string(models.games))
     child = process_string(child)
     changeling = process_string(changeling)
+    id = await task
     game: schema.GameCreate = schema.GameCreate(
         id=id, child_deck_id=child, changeling_deck_id=changeling,
     )
 
     aws = [
         crud.create_game(game),
-        crud.get_cards_by_deck(changeling),
-        crud.get_cards_by_deck(child),
+        crud.get_cards_by_deck(changeling, True),
+        crud.get_cards_by_deck(child, True),
     ]
 
     results = await asyncio.gather(*aws)
