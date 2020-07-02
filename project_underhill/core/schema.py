@@ -1,5 +1,6 @@
 from enum import Enum, IntFlag, auto
 from pydantic import BaseModel
+# noinspection PyPackageRequirements
 from typing import Dict, Set, List
 
 
@@ -65,10 +66,11 @@ class Card(CardBase):
         return hash(self.id)
 
 
-class PlayerState(IntFlag):
+class GameState(IntFlag):
     self_cards_chosen = auto()
     other_cards_chosen = auto()
     ready = auto()
+    complete = auto()
 
 
 class PlayerType(str, Enum):
@@ -102,8 +104,7 @@ class Hand(BaseModel):
 
 class RoundBase(BaseModel):
     round_number: int
-    changeling_waiting: PlayerState = PlayerState.not_ready
-    child_waiting: PlayerState = PlayerState.not_ready
+    state: GameState = GameState(0)
     changeling_hand: Hand
     child_hand: Hand
     game_id: str
@@ -114,4 +115,4 @@ class RoundCreate(RoundBase):
 
 
 class Round(RoundBase):
-    id: int
+    imd: int
