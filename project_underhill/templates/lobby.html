@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="section">
+        <h1 class="title">{{ game.id }}</h1>
+    </div>
+
+    <p> Are you Changeling or child?</p>
+
+    <div class="field is-grouped">
+
+        <form class="control" action="/game/{{ game.id }}/play?who=changeling" method="post">
+            <div class="control">
+                <button class="button is-primary">Changeling</button>
+            </div>
+        </form>
+        <form class="control" action="/game/{{ game.id }}/play?who=child" method="post">
+            <div class="control">
+                <button class="button is-primary">Child</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
