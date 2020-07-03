@@ -1,4 +1,15 @@
 from . import schema, models
+from random import choices
+
+
+def get_subset(hand: schema.Hand, n: int) -> schema.Hand:
+    new_hand = schema.Hand(
+        relationships=choices(hand.relationships, k=n),
+        possessions=choices(hand.possessions, k=n),
+        actions=choices(hand.actions, k=n),
+        feelings=choices(hand.feelings, k=n),
+    )
+    return new_hand
 
 
 async def round_one(game_round: schema.Round, who: schema.PlayerType):
@@ -7,8 +18,7 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
     f: schema.GameState = game_round.state
     if who == schema.PlayerType.changeling:
         if not (f & states.changeling_other_cards_chosen):
-            hand = game_round.child_hand
-            hand.relationships = hand.relationships[:2]
+            hand = get_subset(game_round.child_hand, 2)
             hand_to_choose_from = hand
             number_to_choose = 2
             new_flags = states.child_other_cards_chosen
