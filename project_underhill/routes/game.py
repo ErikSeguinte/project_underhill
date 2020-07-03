@@ -12,13 +12,11 @@ templates = Jinja2Templates(directory="project_underhill/templates")
 
 @router.get("/start")
 async def create_game(request: Request):
-
     return templates.TemplateResponse("create_game.html", {"request": request})
 
 
 @router.post("/setup")
 async def setup_game(changeling=Form(None), child=Form(None)):
-
     task = asyncio.create_task(crud.get_unique_string(models.games))
     child = process_string(child)
     changeling = process_string(changeling)
@@ -90,18 +88,67 @@ def process_string(string: str) -> str:
 @router.post("/{game_id}/play", response_model=schema.Round)
 async def play(request: Request, game_id: str, who: schema.PlayerType):
     game_round = await crud.get_round_by_game_id(game_id)
-    hand, number, flags = await game_logic.play(game_round, who)
+    response = await game_logic.play(game_round, who)
+    if response:
+        if response == "ready":
+            # TODO
+            pass
+        else:
+            hand, number, flags, owner = response
 
-    return templates.TemplateResponse(
-        "choose.html",
-        {
-            "request": request,
-            "hand": hand,
-            "number": number,
-            "flags": flags,
-            "game_id": game_id,
-        },
-    )
+            return templates.TemplateResponse(
+                "choose.html",
+                {
+                    "request": request,
+                    "hand": hand,
+                    "number": number,
+                    "flags": flags,
+                    "game_id": game_id,
+                    "owner": owner,
+                },
+            )
+
+
+@router.post("/{game_id}/process")
+async def receive_cards(
+    request: Request,
+    owner: schema.PlayerType,
+    flags: int = 0,
+    r1: str = Form(""),
+    r2: str = Form(""),
+    r3: str = Form(""),
+    r4: str = Form(""),
+    r0: str = Form(""),
+    p1: str = Form(""),
+    p2: str = Form(""),
+    p3: str = Form(""),
+    p4: str = Form(""),
+    p0: str = Form(""),
+    a1: str = Form(""),
+    a2: str = Form(""),
+    a3: str = Form(""),
+    a4: str = Form(""),
+    a0: str = Form(""),
+    f1: str = Form(""),
+    f2: str = Form(""),
+    f3: str = Form(""),
+    f4: str = Form(""),
+    f0: str = Form(""),
+):
+    # relationships = [x for x in [r1, r2, r3, r4, r5] if x]
+    relationships = [r0, r1, r2, r3, r4]
+    possessions = [p0, p1, p2, p3, p4]
+    actions = [a0, a1, a2, a3, a4]
+    feelings = [f0, f1, f2, f3, f4]
+
+    return {
+        "response": {
+            "relationships": relationships,
+            "possessions": possessions,
+            "actions": actions,
+            "feelings": feelings,
+        }
+    }
 
 
 @router.get("/{game_id}")

@@ -20,8 +20,17 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
     if who == schema.PlayerType.changeling:
         if not (f & states.changeling_other_cards_chosen):
             hand = game_round.child_hand
+            owner = schema.PlayerType.child
             hand_to_choose_from = hand
             number_to_choose = 2
+            new_flags = states.changeling_other_cards_chosen
+            response = (hand_to_choose_from, number_to_choose, new_flags, owner)
+
+    else:
+        if not (f & states.child_other_cards_chosen):
+            hand = game_round.changeling_hand
+            hand_to_choose_from = hand
+            number_to_choose = 1
             new_flags = states.child_other_cards_chosen
             response = (hand_to_choose_from, number_to_choose, new_flags)
 

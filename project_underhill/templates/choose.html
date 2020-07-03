@@ -3,7 +3,7 @@
 {% block content %}
     <div class="section">
         <p> Number to choose from each type: {{ number }}</p>
-        <form action="/game/{{ game_id }}/process?flags={{ flags }}">
+        <form action="/game/{{ game_id }}/process?flags={{ flags.value }}&owner={{ owner.value }}" method="post">
             <div class="section">
                 <h3 class="title">Relationships</h3>
                 {% for n in range(0,5) %}
@@ -11,7 +11,7 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="r{{ n }}">
+                                    <input type="checkbox" name="r{{ n }}" value="{{ n }}">
                                     {{ hand.relationships[n]['text'] }}
                                 </label>
                             </div>
@@ -35,7 +35,7 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="p{{ n }}">
+                                    <input type="checkbox" name="p{{ n }}" value="{{ n }}">
                                     {{ hand.possessions[n]['text'] }}
                                 </label>
                             </div>
@@ -59,7 +59,7 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="a{{ n }}">
+                                    <input type="checkbox" name="a{{ n }}" value="{{ n }}">
                                     {{ hand.actions[n]['text'] }}
                                 </label>
                             </div>
@@ -83,7 +83,7 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="f{{ n }}">
+                                    <input type="checkbox" name="f{{ n }}" value="{{ n }}">
                                     {{ hand.feelings[n]['text'] }}
                                 </label>
                             </div>
@@ -99,6 +99,9 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+            <div class="control">
+                <button class="button is-primary">Submit</button>
+            </div>
             </div>
         </form>
     </div>
