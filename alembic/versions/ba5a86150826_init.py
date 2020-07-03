@@ -1,8 +1,8 @@
-"""Foreign Key
+"""init
 
-Revision ID: 5b1c7bf2e174
+Revision ID: ba5a86150826
 Revises: 
-Create Date: 2020-07-01 12:51:57.392429
+Create Date: 2020-07-02 17:34:32.193699
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "5b1c7bf2e174"
+revision = "ba5a86150826"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -63,13 +63,15 @@ def upgrade():
         sa.Column("game_id", sa.String(), nullable=False),
         sa.Column("round_number", sa.Integer(), nullable=True),
         sa.Column(
-            "changeling_waiting",
-            sa.Enum("not_ready", "ready", "waiting", "complete", name="playerstate"),
-            nullable=True,
-        ),
-        sa.Column(
-            "child_waiting",
-            sa.Enum("not_ready", "ready", "waiting", "complete", name="playerstate"),
+            "state",
+            sa.Enum(
+                "not_ready",
+                "self_cards_chosen",
+                "other_cards_chosen",
+                "ready",
+                "complete",
+                name="gamestate",
+            ),
             nullable=True,
         ),
         sa.Column("changeling_hand", sa.PickleType(), nullable=True),

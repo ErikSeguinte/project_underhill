@@ -1,6 +1,6 @@
 from sqlalchemy import Table, Column, String, Integer, ForeignKey, Enum, PickleType
 from .database import metadata, engine
-from .schema import CardType, PlayerState, PlayerType
+from .schema import CardType, GameState, PlayerType
 
 users = Table(
     "users",
@@ -43,8 +43,7 @@ rounds = Table(
     Column("id", Integer, primary_key=True),
     Column("game_id", String, ForeignKey("games.id"), nullable=False),
     Column("round_number", Integer),
-    Column("changeling_waiting", Enum(PlayerState)),
-    Column("child_waiting", Enum(PlayerState)),
+    Column("state", Enum(GameState)),
     Column("changeling_hand", PickleType),
     Column("child_hand", PickleType),
 )

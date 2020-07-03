@@ -89,7 +89,7 @@ def process_string(string: str) -> str:
 
 @router.post("/{game_id}/play")
 async def play(game_id: str, who: schema.PlayerType):
-    crud.get_game(game)
+    game = await crud.get_round_by_game_id(game_id)
 
 
 @router.get("/{game_id}")
