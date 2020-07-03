@@ -16,14 +16,16 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
     states = schema.GameState
 
     f: schema.GameState = game_round.state
+    response = []
     if who == schema.PlayerType.changeling:
         if not (f & states.changeling_other_cards_chosen):
-            hand = get_subset(game_round.child_hand, 2)
+            hand = game_round.child_hand
             hand_to_choose_from = hand
             number_to_choose = 2
             new_flags = states.child_other_cards_chosen
+            response = (hand_to_choose_from, number_to_choose, new_flags)
 
-    return hand_to_choose_from, number_to_choose, new_flags
+    return response
 
 
 async def play(game_round: schema.Round, who: schema.PlayerType):
