@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, Request, Form
 from fastapi.templating import Jinja2Templates
-from ..core import crud, schema, models
+from ..core import crud, schema, models, game_logic
 from typing import List, Optional
 from random import choices
 
@@ -88,10 +88,20 @@ def process_string(string: str) -> str:
 
 
 @router.post("/{game_id}/play", response_model=schema.Round)
-async def play(game_id: str, who: schema.PlayerType):
+async def play(request: Request, game_id: str, who: schema.PlayerType):
     game_round = await crud.get_round_by_game_id(game_id)
+    hand, number, flags = await game_logic.play(game_round, who)
 
-    return game_round
+    return templates.TemplateResponse(
+        "choose.html",
+        {
+            "request": request,
+            "hand": hand,
+            "number": number,
+            "flags": flags,
+            "game_id": game_id,
+        },
+    )
 
 
 @router.get("/{game_id}")

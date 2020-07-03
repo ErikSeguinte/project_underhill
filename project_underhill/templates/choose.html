@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="section">
+        <p> Number to choose from each type: {{ number }}</p>
+        <form action="/game/{{ game_id }}/process?flags={{ flags }}">
+            <div class="section">
+                <h3 class="title">Relationships</h3>
+                {% for n in range(0,5) %}
+                    {% if hand.relationships[n:(n+1)]: %}
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox" name="r{{ n }}">
+                                    <input type="checkbox">
+                                    {{ hand.relationships[n]['text'] }}
+                                </label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="field is-hidden">
+                            <div class="control">
+                                <label class="checkbox" name="r{{ n }}">
+                                    <input type="checkbox">
+                                    blank
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

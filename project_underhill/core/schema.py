@@ -69,8 +69,10 @@ class Card(CardBase):
 
 class GameState(IntFlag):
     not_ready = 0
-    self_cards_chosen = auto()
-    other_cards_chosen = auto()
+    changeling_self_cards_chosen = auto()
+    changeling_other_cards_chosen = auto()
+    child_self_cards_chosen = auto()
+    child_other_cards_chosen = auto()
     ready = auto()
     complete = auto()
 

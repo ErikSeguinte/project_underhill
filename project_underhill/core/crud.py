@@ -141,6 +141,5 @@ async def get_round_by_game_id(game_id: str) -> schema.Round:
         .where(games.c.current_round == rounds.c.round_number)
     )
     game_round = await database.fetch_one(query)
-    round_object = schema.Round.from_orm(game_round)
 
     return schema.Round.from_orm(game_round)
