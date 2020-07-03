@@ -1,5 +1,6 @@
 from enum import Enum, IntFlag, auto
 from pydantic import BaseModel
+
 # noinspection PyPackageRequirements
 from typing import Dict, Set, List
 
@@ -105,8 +106,6 @@ class Hand(BaseModel):
 class RoundBase(BaseModel):
     round_number: int
     state: GameState = GameState(0)
-    changeling_hand: Hand
-    child_hand: Hand
     game_id: str
 
 
