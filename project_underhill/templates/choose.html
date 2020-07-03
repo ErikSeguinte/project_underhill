@@ -10,8 +10,8 @@
                     {% if hand.relationships[n:(n+1)]: %}
                         <div class="field">
                             <div class="control">
-                                <label class="checkbox" name="r{{ n }}">
-                                    <input type="checkbox">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="r{{ n }}">
                                     {{ hand.relationships[n]['text'] }}
                                 </label>
                             </div>
@@ -19,8 +19,80 @@
                     {% else %}
                         <div class="field is-hidden">
                             <div class="control">
-                                <label class="checkbox" name="r{{ n }}">
-                                    <input type="checkbox">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="r{{ n }}">
+                                    blank
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="section">
+                <h3 class="title">Possessions</h3>
+                {% for n in range(0,5) %}
+                    {% if hand.possessions[n:(n+1)]: %}
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="p{{ n }}">
+                                    {{ hand.possessions[n]['text'] }}
+                                </label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="field is-hidden">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="p{{ n }}">
+                                    blank
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="section">
+                <h3 class="title">Actions</h3>
+                {% for n in range(0,5) %}
+                    {% if hand.actions[n:(n+1)]: %}
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="a{{ n }}">
+                                    {{ hand.actions[n]['text'] }}
+                                </label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="field is-hidden">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="a{{ n }}">
+                                    blank
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="section">
+                <h3 class="title">Feelings</h3>
+                {% for n in range(0,5) %}
+                    {% if hand.feelings[n:(n+1)]: %}
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="f{{ n }}">
+                                    {{ hand.feelings[n]['text'] }}
+                                </label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="field is-hidden">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input type="checkbox" name="f{{ n }}">
                                     blank
                                 </label>
                             </div>
