@@ -108,6 +108,11 @@ class RoundBase(BaseModel):
     round_number: int
     state: GameState = GameState(0)
     game_id: str
+    changeling_hand: Hand
+    child_hand: Hand
+
+    class Config:
+        orm_mode = True
 
 
 class RoundCreate(RoundBase):
@@ -115,4 +120,4 @@ class RoundCreate(RoundBase):
 
 
 class Round(RoundBase):
-    imd: int
+    id: int

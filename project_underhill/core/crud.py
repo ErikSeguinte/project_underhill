@@ -134,4 +134,13 @@ async def get_game(game_id: str) -> schema.Game:
 async def get_round_by_game_id(game_id: str) -> schema.Round:
     games = models.games
     rounds = models.rounds
-    breakpoint()
+    join = games.join(rounds)
+    query = (
+        select(rounds.c)
+        .select_from(join)
+        .where(games.c.current_round == rounds.c.round_number)
+    )
+    game_round = await database.fetch_one(query)
+    round_object = schema.Round.from_orm(game_round)
+
+    return schema.Round.from_orm(game_round)
