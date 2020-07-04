@@ -3,8 +3,9 @@ from . import schema
 from .security import pwd_context, get_random_string
 from .database import database
 from sqlite3 import IntegrityError
-from sqlalchemy import select
+from sqlalchemy import select, update
 from typing import List, Dict, Union
+from asyncio import Lock
 
 
 async def create_user(user: schema.UserCreate) -> schema.User:
@@ -143,3 +144,23 @@ async def get_round_by_game_id(game_id: str) -> schema.Round:
     game_round = await database.fetch_one(query)
 
     return schema.Round.from_orm(game_round)
+
+
+flag_lock = Lock()
+
+
+async def update_flags(game_id: str, new_flags: schema.GameState):
+    async with flag_lock:
+        round = await get_round_by_game_id(game_id)
+        old_flags = round.state
+        combined_flags = old_flags | new_flags
+        round_id = round.id
+        query = (
+            update(models.rounds)
+            .where(models.rounds.c.id == round_id)
+            .values(state=combined_flags)
+        )
+
+        results = await database.execute(query)
+
+    round = await get_round_by_game_id(game_id)

@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 3edd1ab465e2
+Revision ID: 2f4910e212d5
 Revises: 
-Create Date: 2020-07-02 18:16:49.417784
+Create Date: 2020-07-03 20:15:52.198392
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "3edd1ab465e2"
+revision = "2f4910e212d5"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -66,8 +66,10 @@ def upgrade():
             "state",
             sa.Enum(
                 "not_ready",
-                "self_cards_chosen",
-                "other_cards_chosen",
+                "changeling_self_cards_chosen",
+                "changeling_other_cards_chosen",
+                "child_self_cards_chosen",
+                "child_other_cards_chosen",
                 "ready",
                 "complete",
                 name="gamestate",

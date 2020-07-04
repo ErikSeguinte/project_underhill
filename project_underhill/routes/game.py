@@ -70,6 +70,7 @@ def parse_hand(cards) -> schema.Hand:
 
 async def setup_round(game_id, round_number, cards):
     changeling, child = deal_cards(cards)
+    breakpoint()
     game_round = schema.RoundCreate(
         round_number=round_number,
         game_id=game_id,
@@ -113,34 +114,43 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
 async def receive_cards(
     request: Request,
     owner: schema.PlayerType,
+    game_id: str,
     flags: int = 0,
-    r1: str = Form(""),
-    r2: str = Form(""),
-    r3: str = Form(""),
-    r4: str = Form(""),
-    r0: str = Form(""),
-    p1: str = Form(""),
-    p2: str = Form(""),
-    p3: str = Form(""),
-    p4: str = Form(""),
-    p0: str = Form(""),
-    a1: str = Form(""),
-    a2: str = Form(""),
-    a3: str = Form(""),
-    a4: str = Form(""),
-    a0: str = Form(""),
-    f1: str = Form(""),
-    f2: str = Form(""),
-    f3: str = Form(""),
-    f4: str = Form(""),
-    f0: str = Form(""),
+    r1: int = Form(None),
+    r2: int = Form(None),
+    r3: int = Form(None),
+    r4: int = Form(None),
+    r0: int = Form(None),
+    p1: int = Form(None),
+    p2: int = Form(None),
+    p3: int = Form(None),
+    p4: int = Form(None),
+    p0: int = Form(None),
+    a1: int = Form(None),
+    a2: int = Form(None),
+    a3: int = Form(None),
+    a4: int = Form(None),
+    a0: int = Form(None),
+    f1: int = Form(None),
+    f2: int = Form(None),
+    f3: int = Form(None),
+    f4: int = Form(None),
+    f0: int = Form(None),
 ):
+    game_round = await crud.get_round_by_game_id(game_id)
+    if owner == schema.PlayerType.changeling:
+        hand = game_round.changeling_hand
+    else:
+        hand = game_round.child_hand
     # relationships = [x for x in [r1, r2, r3, r4, r5] if x]
-    relationships = [r0, r1, r2, r3, r4]
-    possessions = [p0, p1, p2, p3, p4]
-    actions = [a0, a1, a2, a3, a4]
-    feelings = [f0, f1, f2, f3, f4]
+    relationships = [
+        hand.relationships[n] for n in [r0, r1, r2, r3, r4] if n is not None
+    ]
+    possessions = [hand.relationships[n] for n in [p0, p1, p2, p3, p4] if n is not None]
+    actions = [hand.relationships[n] for n in [a0, a1, a2, a3, a4] if n is not None]
+    feelings = [hand.relationships[n] for n in [f0, f1, f2, f3, f4] if n is not None]
 
+    await crud.update_flags(game_id, schema.GameState(flags))
     return {
         "response": {
             "relationships": relationships,
