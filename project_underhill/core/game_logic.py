@@ -18,23 +18,55 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
     f: schema.GameState = game_round.state
     response = []
     if who == schema.PlayerType.changeling:
-        if not (f & states.changeling_other_cards_chosen):
-            hand = game_round.child_hand
-            owner = schema.PlayerType.child
-            hand_to_choose_from = hand
-            number_to_choose = 2
-            new_flags = states.changeling_other_cards_chosen
-            response = (hand_to_choose_from, number_to_choose, new_flags, owner)
+        phase = [
+            states.changeling_other_cards_chosen,
+            states.changeling_other_cards_chosen | states.child_other_cards_chosen,
+        ]
+        if not (f & phase[0]):
+
+            response = process_phase(
+                hand=game_round.child_hand,
+                owner=schema.PlayerType.child,
+                n=2,
+                next_phase=states.changeling_other_cards_chosen,
+            )
+        elif f & phase[1] == phase[1]:
+            response = "ready"
 
     else:
-        if not (f & states.child_other_cards_chosen):
-            hand = game_round.changeling_hand
-            hand_to_choose_from = hand
-            owner = schema.PlayerType.changeling
-            number_to_choose = 1
-            new_flags = states.child_other_cards_chosen
-            response = (hand_to_choose_from, number_to_choose, new_flags, owner)
+        phase = [
+            states.child_other_cards_chosen,
+            states.child_other_cards_chosen | states.changeling_other_cards_chosen,
+            states.child_other_cards_chosen
+            | states.changeling_other_cards_chosen
+            | states.child_self_cards_chosen,
+        ]
+        breakpoint()
+        if not (f & phase[0]):
+            response = process_phase(
+                hand=game_round.changeling_hand,
+                owner=schema.PlayerType.changeling,
+                n=1,
+                next_phase=states.child_other_cards_chosen,
+            )
+        elif f & phase[2] == phase[2]:
+            response = "ready"
+        elif f & phase[1] == phase[1]:
+            response = process_phase(
+                hand=game_round.child_hand,
+                owner=schema.PlayerType.child,
+                n=1,
+                next_phase=states.child_self_cards_chosen,
+            )
 
+    return response
+
+
+def process_phase(hand: schema.Hand, owner: schema.PlayerType, n, next_phase):
+    hand_to_choose_from = hand
+    number_to_choose = n
+    new_flags = next_phase
+    response = (hand_to_choose_from, number_to_choose, new_flags, owner)
     return response
 
 
