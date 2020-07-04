@@ -16,7 +16,7 @@ decks = Table(
     "decks",
     metadata,
     Column("id", String(8), primary_key=True),
-    Column("owner_id", Integer, ForeignKey("users.id")),
+    Column("owner_id", String, ForeignKey("users.id")),
 )
 
 cards = Table(
