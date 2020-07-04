@@ -3,10 +3,9 @@ from project_underhill.core.main import create_app
 from project_underhill.core.database import database
 from fastapi.testclient import TestClient
 from lorem_text.lorem import words
-from asyncio import run
+from project_underhill import app
 
-
-client = TestClient(create_app())
+client = TestClient(app)
 
 
 def build_deck():
