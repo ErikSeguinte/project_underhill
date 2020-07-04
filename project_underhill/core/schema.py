@@ -112,6 +112,9 @@ class Hand(BaseModel):
         pprint([card.json() for card in self.actions])
         pprint([card.json() for card in self.feelings])
 
+    def to_list(self):
+        return self.relationships + self.possessions + self.actions + self.feelings
+
 
 class RoundBase(BaseModel):
     round_number: int

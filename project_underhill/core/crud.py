@@ -167,6 +167,7 @@ async def update_flags(game_id: str, new_flags: schema.GameState):
 
 
 async def update_hand(game_id: str, new_hand: schema.Hand, owner):
+    breakpoint()
     game_round = await get_round_by_game_id(game_id)
     rounds = models.rounds
     round_id = game_round.id

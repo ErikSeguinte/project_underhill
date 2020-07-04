@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="section">
+        <p>You are ready to write your letter. It must include the following:</p>
+
+        <h3 class="subtitle">Unique ID:{{ deck_id }}</h3>
+
+        <ul>
+            {% for card in cards %}
+                <li> {{ card.text }} --- {{ card.type.value }}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+{% endblock content %}

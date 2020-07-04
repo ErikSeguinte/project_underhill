@@ -94,8 +94,14 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
     if response:
         if response == "ready":
             # TODO
-            return {"message": "You are Ready to play!"}
             pass
+            if who == schema.PlayerType.changeling:
+                cards = game_round.changeling_hand.to_list()
+            else:
+                cards = game_round.child_hand.to_list()
+            return templates.TemplateResponse(
+                "ready_to_play.html", {"request": request, "cards": cards}
+            )
         else:
             hand, number, flags, owner = response
 
@@ -150,9 +156,9 @@ async def receive_cards(
     relationships = [
         hand.relationships[n] for n in [r0, r1, r2, r3, r4] if n is not None
     ]
-    possessions = [hand.relationships[n] for n in [p0, p1, p2, p3, p4] if n is not None]
-    actions = [hand.relationships[n] for n in [a0, a1, a2, a3, a4] if n is not None]
-    feelings = [hand.relationships[n] for n in [f0, f1, f2, f3, f4] if n is not None]
+    possessions = [hand.possessions[n] for n in [p0, p1, p2, p3, p4] if n is not None]
+    actions = [hand.actions[n] for n in [a0, a1, a2, a3, a4] if n is not None]
+    feelings = [hand.feelings[n] for n in [f0, f1, f2, f3, f4] if n is not None]
 
     new_hand = schema.Hand(
         relationships=relationships,

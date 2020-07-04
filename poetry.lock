@@ -431,6 +431,17 @@ MarkupSafe = ">=0.23"
 i18n = ["Babel (>=0.8)"]
 
 [[package]]
+category = "dev"
+description = "Dummy lorem ipsum text generator"
+name = "lorem-text"
+optional = false
+python-versions = ">=3.5"
+version = "1.5"
+
+[package.dependencies]
+Click = ">=7.0"
+
+[[package]]
 category = "main"
 description = "A super-fast templating language that borrows the  best ideas from the existing templating languages."
 name = "mako"
@@ -826,7 +837,7 @@ python-versions = ">=3.6.1"
 version = "8.1"
 
 [metadata]
-content-hash = "d21023ca3af52141a43b8011aec5bebf3f12ce55906525a1663fd1e09b431238"
+content-hash = "96c6c7ed0b8d1b35f741f21d9b7a38f79b5153a14d71238facef701e8adcd7fb"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1010,6 +1021,10 @@ itsdangerous = [
 jinja2 = [
     {file = "Jinja2-2.11.2-py2.py3-none-any.whl", hash = "sha256:f0a4641d3cf955324a89c04f3d94663aa4d638abe8f733ecd3582848e1c37035"},
     {file = "Jinja2-2.11.2.tar.gz", hash = "sha256:89aab215427ef59c34ad58735269eb58b1a5808103067f7bb9d5836c651b3bb0"},
+]
+lorem-text = [
+    {file = "lorem_text-1.5-py2.py3-none-any.whl", hash = "sha256:1997aa4efe8f6505d3d73056fb8c8d3d8e2847107329469d395388010e531036"},
+    {file = "lorem_text-1.5.tar.gz", hash = "sha256:3f151466814bd1ad66b9b41e8482c755d1e3bc78d6dad528f1f8586d868e8a7e"},
 ]
 mako = [
     {file = "Mako-1.1.3-py2.py3-none-any.whl", hash = "sha256:93729a258e4ff0747c876bd9e20df1b9758028946e976324ccd2d68245c7b6a9"},

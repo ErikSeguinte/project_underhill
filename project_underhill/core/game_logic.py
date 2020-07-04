@@ -41,7 +41,6 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
             | states.changeling_other_cards_chosen
             | states.child_self_cards_chosen,
         ]
-        breakpoint()
         if not (f & phase[0]):
             response = process_phase(
                 hand=game_round.changeling_hand,
