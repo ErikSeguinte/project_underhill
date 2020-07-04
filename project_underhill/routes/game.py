@@ -35,7 +35,7 @@ async def setup_game(request: Request, changeling=Form(None), child=Form(None)):
     results = await asyncio.gather(*aws)
 
     combined_deck = categorize_decks(results[1] + results[2])
-    aws = [setup_round(id, n, combined_deck) for n in range(1, 5)]
+    aws = [setup_round(id, n, combined_deck) for n in range(1, 4)]
 
     await asyncio.gather(*aws)
 
