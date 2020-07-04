@@ -1,7 +1,9 @@
 from project_underhill import __version__
 from project_underhill.core.main import create_app
+from project_underhill.core.database import database
 from fastapi.testclient import TestClient
 from lorem_text.lorem import words
+from asyncio import run
 
 
 client = TestClient(create_app())
@@ -41,5 +43,6 @@ def test_version():
 
 
 if __name__ == "__main__":
+
     build_deck()
     build_deck()
