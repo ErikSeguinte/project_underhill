@@ -23,8 +23,8 @@ async def create_user(user: schema.UserCreate) -> schema.User:
             user_id = get_random_string()
 
     query = users.select().where(users.c.id == user_id)
-    user: schema.User = await database.fetch_one(query)
-    return schema.User.from_orm(user)
+    user = await database.fetch_one(query)
+    return schema.User(**user)
 
 
 async def create_card(card: schema.CardCreate):
@@ -70,7 +70,7 @@ async def get_cards_by_user(user_id: str):
 
     user_cards = await database.fetch_all(query)
 
-    user_cards = [schema.Card.from_orm(card) for card in user_cards]
+    user_cards = [schema.Card(**card) for card in user_cards]
 
     return user_cards
 
@@ -90,14 +90,14 @@ async def get_cards_by_deck(deck_id: str, categorize=False):
     if categorize:
         processed_cards = {}
         for card in user_cards:
-            card = schema.Card.from_orm(card)
+            card = schema.Card(**card)
             if processed_cards.get(card.type):
                 processed_cards[card.type].append(card)
             else:
                 processed_cards[card.type] = [card]
 
     else:
-        processed_cards = [schema.Card.from_orm(card) for card in user_cards]
+        processed_cards = [schema.Card(**card) for card in user_cards]
 
     return processed_cards
 
@@ -129,7 +129,7 @@ async def get_game(game_id: str) -> schema.Game:
     games = models.games
     query = games.select().where(games.c.id == game_id)
     game = await database.fetch_one(query)
-    return schema.Game.from_orm(game)
+    return schema.Game(**game)
 
 
 async def get_round_by_game_id(game_id: str) -> schema.Round:
@@ -148,7 +148,7 @@ async def get_round_by_game_id(game_id: str) -> schema.Round:
     )
     game_round = await database.fetch_one(query)
 
-    return schema.Round.from_orm(game_round)
+    return schema.Round(**game_round)
 
 
 flag_lock = Lock()
