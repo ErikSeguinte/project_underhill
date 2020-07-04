@@ -164,3 +164,23 @@ async def update_flags(game_id: str, new_flags: schema.GameState):
         results = await database.execute(query)
 
     round = await get_round_by_game_id(game_id)
+
+
+async def update_hand(game_id: str, new_hand: schema.Hand, owner):
+    game_round = await get_round_by_game_id(game_id)
+    rounds = models.rounds
+    round_id = game_round.id
+    if owner == schema.PlayerType.changeling:
+        query = (
+            update(rounds)
+            .where(models.rounds.c.id == round_id)
+            .values(changeling_hand=new_hand)
+        )
+    else:
+        query = (
+            update(rounds)
+            .where(models.rounds.c.id == round_id)
+            .values(child_hand=new_hand)
+        )
+
+    await database.execute(query)

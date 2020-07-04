@@ -1,5 +1,6 @@
 from fastapi import APIRouter, status, Request, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from ..core import crud, schema, models, game_logic
 from typing import List, Optional
 from random import sample
@@ -16,7 +17,7 @@ async def create_game(request: Request):
 
 
 @router.post("/setup")
-async def setup_game(changeling=Form(None), child=Form(None)):
+async def setup_game(request: Request, changeling=Form(None), child=Form(None)):
     task = asyncio.create_task(crud.get_unique_string(models.games))
     child = process_string(child)
     changeling = process_string(changeling)
@@ -38,7 +39,7 @@ async def setup_game(changeling=Form(None), child=Form(None)):
 
     await asyncio.gather(*aws)
 
-    return {"results": results[1], "results2": results[2]}
+    return RedirectResponse(f"/game/{id}", status_code=status.HTTP_303_SEE_OTHER)
 
 
 def categorize_decks(cards):
@@ -93,7 +94,10 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
     if response:
         if response == "ready":
             # TODO
+            return {"message": "You are Ready to play!"}
             pass
+        elif response == []:
+            return {"message": "Please wait for your partner"}
         else:
             hand, number, flags, owner = response
 
@@ -150,15 +154,22 @@ async def receive_cards(
     actions = [hand.relationships[n] for n in [a0, a1, a2, a3, a4] if n is not None]
     feelings = [hand.relationships[n] for n in [f0, f1, f2, f3, f4] if n is not None]
 
-    await crud.update_flags(game_id, schema.GameState(flags))
-    return {
-        "response": {
-            "relationships": relationships,
-            "possessions": possessions,
-            "actions": actions,
-            "feelings": feelings,
-        }
-    }
+    new_hand = schema.Hand(
+        relationships=relationships,
+        possessions=possessions,
+        actions=actions,
+        feelings=feelings,
+    )
+
+    aws = [
+        crud.update_flags(game_id, schema.GameState(flags)),
+        crud.update_hand(game_id, new_hand, owner),
+    ]
+
+    await asyncio.gather(*aws)
+    return RedirectResponse(
+        url=f"/game/{game_id}", status_code=status.HTTP_303_SEE_OTHER
+    )
 
 
 @router.get("/{game_id}")
