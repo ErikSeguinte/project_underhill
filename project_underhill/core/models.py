@@ -43,7 +43,7 @@ rounds = Table(
     Column("id", Integer, primary_key=True),
     Column("game_id", String, ForeignKey("games.id"), nullable=False),
     Column("round_number", Integer),
-    Column("state", Enum(GameState)),
+    Column("state", Integer),
     Column("changeling_hand", PickleType),
     Column("child_hand", PickleType),
 )

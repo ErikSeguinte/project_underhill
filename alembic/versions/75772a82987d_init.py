@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 2f4910e212d5
+Revision ID: 75772a82987d
 Revises: 
-Create Date: 2020-07-03 20:15:52.198392
+Create Date: 2020-07-03 21:49:25.891398
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "2f4910e212d5"
+revision = "75772a82987d"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -62,20 +62,7 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("game_id", sa.String(), nullable=False),
         sa.Column("round_number", sa.Integer(), nullable=True),
-        sa.Column(
-            "state",
-            sa.Enum(
-                "not_ready",
-                "changeling_self_cards_chosen",
-                "changeling_other_cards_chosen",
-                "child_self_cards_chosen",
-                "child_other_cards_chosen",
-                "ready",
-                "complete",
-                name="gamestate",
-            ),
-            nullable=True,
-        ),
+        sa.Column("state", sa.Integer(), nullable=True),
         sa.Column("changeling_hand", sa.PickleType(), nullable=True),
         sa.Column("child_hand", sa.PickleType(), nullable=True),
         sa.ForeignKeyConstraint(["game_id"], ["games.id"],),

@@ -87,7 +87,7 @@ def process_string(string: str) -> str:
     return string
 
 
-@router.post("/{game_id}/play", response_model=schema.Round)
+@router.post("/{game_id}/play")
 async def play(request: Request, game_id: str, who: schema.PlayerType):
     game_round = await crud.get_round_by_game_id(game_id)
     response = await game_logic.play(game_round, who)
@@ -96,8 +96,6 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
             # TODO
             return {"message": "You are Ready to play!"}
             pass
-        elif response == []:
-            return {"message": "Please wait for your partner"}
         else:
             hand, number, flags, owner = response
 
@@ -112,6 +110,8 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
                     "owner": owner,
                 },
             )
+
+    return {"message": "Please wait for your partner"}
 
 
 @router.post("/{game_id}/process")
