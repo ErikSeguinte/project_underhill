@@ -1,5 +1,6 @@
 from enum import Enum, IntFlag, auto
 from pydantic import BaseModel
+from pprint import pprint
 
 # noinspection PyPackageRequirements
 from typing import Dict, Set, List
@@ -104,6 +105,12 @@ class Hand(BaseModel):
     possessions: List[Card]
     actions: List[Card]
     feelings: List[Card]
+
+    def pprint(self):
+        pprint([card.json() for card in self.relationships])
+        pprint([card.json() for card in self.possessions])
+        pprint([card.json() for card in self.actions])
+        pprint([card.json() for card in self.feelings])
 
 
 class RoundBase(BaseModel):
