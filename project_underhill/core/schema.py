@@ -74,8 +74,8 @@ class GameState(IntFlag):
     changeling_other_cards_chosen = auto()
     child_self_cards_chosen = auto()
     child_other_cards_chosen = auto()
-    ready = auto()
-    complete = auto()
+    changeling_complete = auto()
+    child_complete = auto()
 
 
 class PlayerType(str, Enum):

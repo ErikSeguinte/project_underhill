@@ -100,7 +100,8 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
             else:
                 cards = game_round.child_hand.to_list()
             return templates.TemplateResponse(
-                "ready_to_play.html", {"request": request, "cards": cards}
+                "ready_to_play.html",
+                {"request": request, "cards": cards, "who": who, "game_id": game_id},
             )
         else:
             hand, number, flags, owner = response
@@ -176,6 +177,13 @@ async def receive_cards(
     return RedirectResponse(
         url=f"/game/{game_id}", status_code=status.HTTP_303_SEE_OTHER
     )
+
+
+@router.post("/{game_id}/complete")
+async def complete_round(who: schema.PlayerType, complete: str = Form("")):
+    if complete:
+        if who == schema.PlayerType.changeling:
+            new_flag = schema.GameState.c
 
 
 @router.get("/{game_id}")
