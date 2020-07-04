@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Request, Form
 from fastapi.templating import Jinja2Templates
 from ..core import crud, schema, models, game_logic
 from typing import List, Optional
-from random import choices
+from random import sample
 
 import asyncio
 
@@ -57,9 +57,10 @@ def deal_cards(cards):
     child = {}
 
     for card_type in schema.CardType.__members__:
-        superset = choices(cards[card_type], k=10)
-        changeling[f"{card_type}s"] = set(choices(superset, k=5))
-        child[f"{card_type}s"] = set(superset).difference(changeling)
+        superset = sample(cards[card_type], k=10)
+        key = f"{card_type}s"
+        changeling[key] = set(sample(superset, k=5))
+        child[key] = set(superset).difference(changeling[key])
 
     return parse_hand(changeling), parse_hand(child)
 
@@ -70,7 +71,6 @@ def parse_hand(cards) -> schema.Hand:
 
 async def setup_round(game_id, round_number, cards):
     changeling, child = deal_cards(cards)
-    breakpoint()
     game_round = schema.RoundCreate(
         round_number=round_number,
         game_id=game_id,
