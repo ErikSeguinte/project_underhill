@@ -42,3 +42,4 @@ def test_version():
 
 if __name__ == "__main__":
     build_deck()
+    build_deck()

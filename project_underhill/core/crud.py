@@ -3,7 +3,7 @@ from . import schema
 from .security import pwd_context, get_random_string
 from .database import database
 from sqlite3 import IntegrityError
-from sqlalchemy import select, update
+from sqlalchemy import select, update, and_
 from typing import List, Dict, Union
 from asyncio import Lock
 
@@ -139,7 +139,12 @@ async def get_round_by_game_id(game_id: str) -> schema.Round:
     query = (
         select(rounds.c)
         .select_from(join)
-        .where(games.c.current_round == rounds.c.round_number)
+        .where(
+            and_(
+                games.c.current_round == rounds.c.round_number,
+                rounds.c.game_id == game_id,
+            )
+        )
     )
     game_round = await database.fetch_one(query)
 
@@ -190,7 +195,7 @@ round_lock = Lock()
 
 
 async def next_round(game_id: str):
-    with round_lock:
+    async with round_lock:
         game = await get_game(game_id)
         round = game.current_round + 1
 
