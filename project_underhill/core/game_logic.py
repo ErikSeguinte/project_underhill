@@ -18,6 +18,8 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
     f: schema.GameState = game_round.state
     response = []
     if who == schema.PlayerType.changeling:
+        if f & states.changeling_complete:
+            return response
         phase = [
             states.changeling_other_cards_chosen,
             states.changeling_other_cards_chosen | states.child_other_cards_chosen,
@@ -34,6 +36,8 @@ async def round_one(game_round: schema.Round, who: schema.PlayerType):
             response = "ready"
 
     else:
+        if f & states.child_complete:
+            return response
         phase = [
             states.child_other_cards_chosen,
             states.child_other_cards_chosen | states.changeling_other_cards_chosen,

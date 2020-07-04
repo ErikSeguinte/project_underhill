@@ -167,7 +167,6 @@ async def update_flags(game_id: str, new_flags: schema.GameState):
 
 
 async def update_hand(game_id: str, new_hand: schema.Hand, owner):
-    breakpoint()
     game_round = await get_round_by_game_id(game_id)
     rounds = models.rounds
     round_id = game_round.id
@@ -185,3 +184,17 @@ async def update_hand(game_id: str, new_hand: schema.Hand, owner):
         )
 
     await database.execute(query)
+
+
+round_lock = Lock()
+
+
+async def next_round(game_id: str):
+    with round_lock:
+        game = await get_game(game_id)
+        round = game.current_round + 1
+
+        games = models.games
+        query = update(games).where(games.c.id == game_id).values(current_round=round)
+
+        await database.execute(query)

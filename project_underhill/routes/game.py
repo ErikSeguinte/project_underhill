@@ -180,10 +180,27 @@ async def receive_cards(
 
 
 @router.post("/{game_id}/complete")
-async def complete_round(who: schema.PlayerType, complete: str = Form("")):
+async def complete_round(
+    game_id: str, who: schema.PlayerType, complete: str = Form("")
+):
     if complete:
         if who == schema.PlayerType.changeling:
-            new_flag = schema.GameState.c
+            new_flag = schema.GameState.changeling_complete
+        else:
+            new_flag = schema.GameState.child_complete
+
+        await crud.update_flags(game_id=game_id, new_flags=new_flag)
+
+        round = await crud.get_round_by_game_id(game_id)
+        f = round.state
+        states = schema.GameState
+        both_completed = states.changeling_complete | states.child_complete
+        if f & both_completed == both_completed:
+            await crud.next_round(game_id)
+
+    return RedirectResponse(
+        url=f"/game/{game_id}", status_code=status.HTTP_303_SEE_OTHER
+    )
 
 
 @router.get("/{game_id}")
