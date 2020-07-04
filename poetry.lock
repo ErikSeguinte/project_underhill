@@ -865,8 +865,8 @@ python-versions = ">=3.6.1"
 version = "8.1"
 
 [metadata]
-content-hash = "02698b2c4414791e8f4ecf53bd9bf47378d615683fbe2de0f01c1960a37e47c1"
-python-versions = "^3.8"
+content-hash = "de4c686c301de332dff1c288a97da9417d2eadb6e58040d107b3d2b631312246"
+python-versions = "3.8.3"
 
 [metadata.files]
 aiofiles = [
