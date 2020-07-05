@@ -101,7 +101,13 @@ async def play(request: Request, game_id: str, who: schema.PlayerType):
                 cards = game_round.child_hand.to_list()
             return templates.TemplateResponse(
                 "ready_to_play.html",
-                {"request": request, "cards": cards, "who": who, "game_id": game_id},
+                {
+                    "request": request,
+                    "cards": cards,
+                    "who": who,
+                    "game_id": game_id,
+                    "current_round": game_round.round_number,
+                },
             )
         else:
             hand, number, flags, owner = response
