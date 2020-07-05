@@ -3,7 +3,8 @@
 {% block content %}
     <div class="section">
         <p> Number to choose from each type: {{ number }}</p>
-        <form action="/game/{{ game_id }}/process?flags={{ flags.value }}&owner={{ owner.value }}" method="post">
+        <form action="/game/{{ game_id }}/process?flags={{ flags.value }}&owner={{ owner.value }}&n={{ n }}"
+              method="post">
             <div class="section">
                 <h3 class="title">Relationships</h3>
                 {% for n in range(0,5) %}
@@ -99,9 +100,9 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-            <div class="control">
-                <button class="button is-primary">Submit</button>
-            </div>
+                <div class="control">
+                    <button class="button is-primary">Submit</button>
+                </div>
             </div>
         </form>
     </div>

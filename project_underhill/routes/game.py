@@ -133,6 +133,7 @@ async def receive_cards(
     owner: schema.PlayerType,
     game_id: str,
     flags: int = 0,
+    n=1,
     r1: int = Form(None),
     r2: int = Form(None),
     r3: int = Form(None),
@@ -167,6 +168,11 @@ async def receive_cards(
     actions = [hand.actions[n] for n in [a0, a1, a2, a3, a4] if n is not None]
     feelings = [hand.feelings[n] for n in [f0, f1, f2, f3, f4] if n is not None]
 
+    for card_type in [relationships, possessions, actions, feelings]:
+        if len(card_type) != n:
+            return {
+                "message": "Invalid choice. Please return to the lobby and try again."
+            }
     new_hand = schema.Hand(
         relationships=relationships,
         possessions=possessions,
