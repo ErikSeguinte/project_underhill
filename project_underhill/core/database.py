@@ -13,7 +13,7 @@ ctx = ssl.create_default_context(cafile="")
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-database = databases.Database(DATABASE_URL, ssl=ctx)
+database = databases.Database(DATABASE_URL, ssl=ctx, max_size=5, min_size=3)
 
 metadata = MetaData()
 
