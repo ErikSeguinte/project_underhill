@@ -3,7 +3,7 @@
 {% block content %}
     <div class="section">
         <p> Number to choose from each type: {{ number }}</p>
-        <form action="/game/{{ game_id }}/process?flags={{ flags.value }}&owner={{ owner.value }}&n={{ n }}"
+        <form action="/game/{{ game_id }}/process?flags={{ flags.value }}&owner={{ owner.value }}&count={{ number }}"
               method="post">
             <div class="section">
                 <h3 class="title">Relationships</h3>
